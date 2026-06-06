@@ -18,8 +18,8 @@ find_package(SQLite3 REQUIRED)
 
 add_executable(jimmy
         src/main.c
-        src/read_token.c
-        src/read_token.h
+        src/token.c
+        src/token.h
         src/main.h
         src/command.c
         src/command.h
@@ -27,6 +27,12 @@ add_executable(jimmy
         src/commands/ping.h
         src/commands/index.c
         src/commands/index.h
+        src/database.c
+        src/database.h
+        src/commands/about.c
+        src/commands/about.h
+        src/colors.h
+        src/images.h
 )
 
 target_link_libraries(jimmy PRIVATE

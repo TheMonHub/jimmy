@@ -1,13 +1,14 @@
 #include "main.h"
 
 #include "command.h"
+#include "database.h"
 
 #include <stdio.h>
 
 #include <concord/discord.h>
 #include <concord/logmod.h>
 
-#include "read_token.h"
+#include "token.h"
 
 #include <assert.h>
 #include <signal.h>
@@ -17,22 +18,16 @@ static volatile sig_atomic_t g_closing = 0;
 static struct discord *g_current_client = NULL;
 static const char *g_project_version = PROJECT_VERSION;
 
+static u64snowflake g_appid = 0;
+
 static void on_ready(struct discord *client, const struct discord_ready *event) {
-  int guilds_size = event->guilds->size;
-  if (guilds_size == 0) {
-    fprintf(stderr, "%s", "WARN: guilds are empty!\n");
-    return;
-  }
-
-  u64snowflake appid = event->application->id;
-
-  for (int i = 0; i < guilds_size; ++i) {
-    deploy_commands(client, appid, event->guilds->array[i].id);
-  }
+  g_appid = event->application->id;
+  printf("%s\n", "Discord bot is ready!");
+  printf("Application ID: %lu\n", g_appid);
 }
 
 static void on_guild_create(struct discord* client, const struct discord_guild* event) {
-  deploy_commands(client, event->application_id, event->id);
+  deploy_commands(client, g_appid, event->id);
 }
 
 void on_shutdown(int sig)
@@ -42,7 +37,6 @@ void on_shutdown(int sig)
   }
   g_closing = 1;
   printf("%s\n", "Shutting down...");
-  assert(g_current_client != NULL);
   discord_shutdown(g_current_client);
 }
 
@@ -62,6 +56,14 @@ int main(const int argc, char *argv[]) {
   if (read_status != 0) {
     fprintf(stderr, "%s", "FATAL: failed to read token from a file!\n");
     return read_status;
+  }
+  printf("%s\n", "OK!");
+
+  printf("%s\n", "Reading database...");
+  int database_status = database_init(argc, argv);
+  if (database_status != 0) {
+    fprintf(stderr, "%s", "ERROR: failed to initialize database!\n");
+    return database_status;
   }
   printf("%s\n", "OK!");
 
@@ -93,6 +95,7 @@ int main(const int argc, char *argv[]) {
   }
   printf("%s\n", "The discord bot has been stopped!\nCleaning up...");
 
+  database_fini();
   discord_cleanup(client);
   ccord_global_cleanup();
   printf("%s\n", "Done!");

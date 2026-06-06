@@ -10,13 +10,8 @@ typedef struct {
   cmd_fn run;
 } Command;
 
-typedef struct {
-  size_t size;
-  Command commands[];
-} CommandTable;
+extern Command g_commands_list[2];
 
-extern CommandTable g_commands_tab;
-
-extern struct discord_create_guild_application_command g_commands;
+extern struct discord_create_guild_application_command g_commands[2];
 
 #endif // INDEX_H
