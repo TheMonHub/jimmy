@@ -6,10 +6,6 @@
 static sqlite3 *g_database = NULL;
 
 int database_init(int argc, char **argv) {
-  if (g_database != NULL) {
-    fprintf(stderr, "Database is already initialized!\n");
-    return -1;
-  }
   int status;
   if (argc <= 2) {
     printf("Database path: %s\n", "jimmy.db");
@@ -29,10 +25,6 @@ int database_init(int argc, char **argv) {
 }
 
 void database_fini() {
-  if (g_database == NULL) {
-    fprintf(stderr, "Database is not initialized!\n");
-    return;
-  }
   int status = sqlite3_close_v2(g_database);
   if (status != SQLITE_OK) {
     fprintf(stderr, "%s\n", sqlite3_errstr(status));

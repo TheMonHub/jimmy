@@ -3,7 +3,7 @@
 # =========================================
 #
 
-cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 project(jimmy
         VERSION 0.1.0
         DESCRIPTION "A Discord bot that will conquer the world one day..."
@@ -12,6 +12,12 @@ project(jimmy
 )
 
 set(CMAKE_C_STANDARD 17)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(Concord REQUIRED IMPORTED_TARGET concord)
 
 find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
@@ -36,9 +42,10 @@ add_executable(jimmy
 )
 
 target_link_libraries(jimmy PRIVATE
-        discord
+        Threads::Threads
         CURL::libcurl
         SQLite::SQLite3
+        PkgConfig::Concord
 )
 
 target_compile_definitions(jimmy PRIVATE PROJECT_VERSION="${CMAKE_PROJECT_VERSION}")

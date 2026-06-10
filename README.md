@@ -51,8 +51,8 @@ Please check https://github.com/Cogmasters/concord for more information.
 ```shell
 git clone https://github.com/Cogmasters/concord.git
 cd concord
-git checkout v3.0.0
-make
+git checkout dev
+CFLAGS="-DCCORD_SIGINTCATCH" make
 sudo make install
 ```
 
