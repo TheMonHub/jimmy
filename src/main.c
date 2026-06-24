@@ -11,6 +11,10 @@
 #include "token.h"
 
 #include <pthread.h>
+#include <string.h>
+
+#include <termios.h>
+#include <unistd.h>
 
 #define OK printf("%s\n", "OK!")
 
@@ -45,9 +49,21 @@ int main(const int argc, char *argv[]) {
   printf("  jimmy - %s\n", g_project_version);
   printf("%s\n", "  Made by TheMonHub");
   printf("%s\n", "  Licensed Under Apache-2.0");
+
+  printf("%s\n", " !!! THIS IS AN INDEV BUILD\n !!! SOME FUNCTIONALITY ARE\n !!! NOT FINISHED AND MUST\n !!! NOT BE USED");
+
   printf("%s\n", "=============================");
 
+  printf("%s\n", "Press ENTER to continue...");
+
+  getchar();
+
   char token[TOKEN_MAX_SIZE];
+
+  if (argc > 1 && strncmp(argv[1], "migrate", 7) == 0) {
+    printf("%s\n", "Migrating database...");
+    return database_migrate(argc, argv);
+  }
 
   printf("%s\n", "Reading token from a file...");
   int read_status = read_token(argc, argv, token, sizeof(token));
@@ -79,6 +95,8 @@ int main(const int argc, char *argv[]) {
   struct discord *client = discord_from_config(&CONFIG);
   if (client == NULL) {
     fprintf(stderr, "%s", "FATAL: failed to initialize a discord bot!\n");
+    database_fini();
+    discord_cleanup(client);
     return 2;
   }
   OK;

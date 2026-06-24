@@ -19,7 +19,7 @@ void on_interaction(struct discord *client, const struct discord_interaction *ev
 
   for (int i = 0; i < sizeof(g_commands_list) / sizeof(Command); i++) {
     if (strcmp(event->data->name, g_commands_list[i].name) != 0) {
-      return;
+      continue;
     }
     g_commands_list[i].run(client, event);
     return;

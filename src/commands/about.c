@@ -8,7 +8,7 @@
 static const struct discord_embed_field G_FIELDS[] = {
   {
     .name = "What is Jimmy?",
-    .value = "Jimmy is a multipurpose open source Discord bot written in C made mainly by TheMonHub noticeably used in r/furryteens discord server."
+    .value = "Jimmy is a multipurpose open source Discord bot written in C by TheMonHub using [Concord](https://github.com/Cogmasters/concord)."
   },
   {
     .name = "Version",
@@ -18,12 +18,11 @@ static const struct discord_embed_field G_FIELDS[] = {
     .name = "Source code",
     .value = "https://github.com/TheMonHub/jimmy"
   },
-
 };
 
 static const struct discord_embed G_EMBEDS[] = {
   {
-    .title = "JIMMY",
+    .title = "About",
     .image =
         &(struct discord_embed_image){
           .url = JIMMY_IMAGE_URL,
@@ -54,6 +53,5 @@ static const struct discord_interaction_response G_PARAMS = {
 };
 
 void about(struct discord *client, const struct discord_interaction *event) {
-
   discord_create_interaction_response(client, event->id, event->token, (struct discord_interaction_response*) &G_PARAMS, NULL);
 }

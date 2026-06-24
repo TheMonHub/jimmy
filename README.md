@@ -6,9 +6,8 @@ A Discord bot that will conquer the world one day...
 
 ## Features
 
-Actually! Jimmy is a multipurpose open source Discord bot written in C using
-[Concord](https://github.com/Cogmasters/concord) made mainly by TheMonHub noticeably used in r/furryteens discord
-server.
+Actually! Jimmy is a multipurpose open source Discord bot written in C by TheMonHub using
+[Concord](https://github.com/Cogmasters/concord).
 
 - Moderation
     - Setting the Rules and sending it neatly into the channel like `#rules` for an example
@@ -36,7 +35,7 @@ server.
 
 ## Building
 
-Supporting only GNU/Linux system
+Only tested on GNU/Linux system
 
 ### Prerequisite
 
@@ -44,14 +43,15 @@ Supporting only GNU/Linux system
 
 Please make sure that you have SQLite3 installed on your system accessible by CMake build system.
 
-#### Concord `v3.0.0`
+#### Concord `v3.X.X`
 
 Please check https://github.com/Cogmasters/concord for more information.
 
+example:
 ```shell
 git clone https://github.com/Cogmasters/concord.git
 cd concord
-git checkout dev
+git checkout v3.0.0
 CFLAGS="-DCCORD_SIGINTCATCH" make
 sudo make install
 ```

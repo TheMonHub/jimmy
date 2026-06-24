@@ -3,13 +3,15 @@
 # =========================================
 #
 
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(jimmy
         VERSION 0.1.0
         DESCRIPTION "A Discord bot that will conquer the world one day..."
         HOMEPAGE_URL "https://github.com/TheMonHub/jimmy"
         LANGUAGES C
 )
+
+set(CMAKE_PROJECT_VERSION "${CMAKE_PROJECT_VERSION}-INDEV")
 
 set(CMAKE_C_STANDARD 17)
 
@@ -39,6 +41,8 @@ add_executable(jimmy
         src/commands/about.h
         src/colors.h
         src/images.h
+        src/statements/database_init.h
+        src/statements/helper.h
 )
 
 target_link_libraries(jimmy PRIVATE
