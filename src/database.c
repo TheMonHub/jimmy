@@ -1,7 +1,6 @@
 #include "database.h"
 
 #include <sqlite3.h>
-#include <stdbool.h>
 #include <stdio.h>
 
 #include "statements/database_init.h"
@@ -16,7 +15,7 @@ static sqlite3 *g_database = NULL;
 //   return 0;
 // }
 
-static int internal_database_init(int argc, char **argv, bool run_init) {
+int database_init(int argc, char **argv) {
   char *path = "jimmy.db";
   if (argc > 2) {
     path = argv[2];
@@ -30,31 +29,12 @@ static int internal_database_init(int argc, char **argv, bool run_init) {
     fprintf(stderr, "%s\n", sqlite3_errstr(status));
   }
 
-  if (run_init == false) {
-    return status;
-  }
-
   status = sqlite3_exec(g_database, g_database_init_stmt, NULL, NULL, NULL);
   if (status != SQLITE_OK) {
     fprintf(stderr, "%s\n", sqlite3_errstr(status));
     database_fini();
   }
   return status;
-}
-
-int database_migrate(int argc, char **argv) {
-  int status = internal_database_init(argc, argv, false);
-  if (status != SQLITE_OK) {
-    fprintf(stderr, "%s\n", sqlite3_errstr(status));
-    return status;
-  }
-
-  database_fini();
-  return status;
-}
-
-int database_init(int argc, char **argv) {
-  return internal_database_init(argc, argv, true);
 }
 
 void database_fini() {

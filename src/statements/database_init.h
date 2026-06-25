@@ -4,50 +4,52 @@
 #include "helper.h"
 
 static const char *g_database_init_stmt = MK_STMT(
-CREATE TABLE IF NOT EXISTS guild_config (
-                                         guild_id TEXT PRIMARY KEY,
-                                         message_channel TEXT,
-                                         member_channel TEXT,
-                                         join_leave_channel TEXT,
-                                         media_channel TEXT,
-                                         mod_channel TEXT
-) STRICT ;
-CREATE TABLE IF NOT EXISTS member_data (
-                                        member_id TEXT PRIMARY KEY,
-                                        message_count INTEGER NOT NULL DEFAULT 0
+PRAGMA journal_mode = WAL;
+PRAGMA synchronous = NORMAL;
+PRAGMA cache_size = -200000;
+
+PRAGMA user_version = 1;
+
+CREATE TABLE IF NOT EXISTS guild_dat (
+  gid INTEGER PRIMARY KEY,
+  ccid INTEGER NOT NULL,
+  crid INTEGER NOT NULL
 ) STRICT;
-CREATE TABLE IF NOT EXISTS autorole_config (
-                                            guild_id TEXT PRIMARY KEY,
-                                            role_id TEXT,
-                                            messages_needed INTEGER NOT NULL DEFAULT 0
+
+CREATE TABLE IF NOT EXISTS rules (
+  rid INTEGER PRIMARY KEY,
+  indx INTEGER,
+  title TEXT NOT NULL,
+  desc TEXT NOT NULL,
+  color TEXT NOT NULL,
+  img TEXT NOT NULL
 ) STRICT;
-CREATE TABLE IF NOT EXISTS guild_rules (
-    guild_id TEXT PRIMARY KEY,
-    rules TEXT,
-    channel TEXT
+
+CREATE TABLE IF NOT EXISTS log_conf (
+  gid INTEGER PRIMARY KEY,
+  message INTEGER,
+  member INTEGER,
+  welcome INTEGER,
+  media INTEGER,
+  mod INTEGER
 ) STRICT;
-CREATE TABLE IF NOT EXISTS warnings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    guild_id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    rule_number INTEGER NOT NULL,
-    note TEXT,
-    timestamp INTEGER NOT NULL
-) STRICT;
+
 CREATE TABLE IF NOT EXISTS cases (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    guild_id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    case_type TEXT NOT NULL,
-    rule_number INTEGER NOT NULL,
-    note TEXT,
-    timestamp INTEGER NOT NULL
+  id INTEGER NOT NULL,
+  gid INTEGER NOT NULL,
+  uid INTEGER NOT NULL,
+  type INTEGER NOT NULL,
+  rid INTEGER NOT NULL,
+  note TEXT,
+  time INTEGER NOT NULL,
+  PRIMARY KEY (gid, uid)
 ) STRICT;
-CREATE TABLE IF NOT EXISTS temp_bans (
-    guild_id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    unban_at INTEGER NOT NULL,
-    PRIMARY KEY (guild_id, user_id)
+
+CREATE TABLE IF NOT EXISTS tbans (
+  gid INTEGER NOT NULL,
+  uid INTEGER NOT NULL,
+  expire INTEGER NOT NULL,
+  PRIMARY KEY (gid, uid)
 ) STRICT;
 );
 
